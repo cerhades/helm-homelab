@@ -96,7 +96,7 @@ service:
     targetPort: 80
 
   internal:
-    enabled: true
+    enabled: false
     name: local
     type: NodePort
     nodePort: 30040
@@ -105,13 +105,13 @@ service:
     targetPort: 80
 
 ingress:
-  enabled: true
+  enabled: false
   className: "traefik"
   annotations: {}
   # kubernetes.io/ingress.class: nginx
   # kubernetes.io/tls-acme: "true"
   hosts:
-  - host: dash.darkwizrd.com
+  - host: www.somesite.com
     paths:
     - path: /
       pathType: Prefix
