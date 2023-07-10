@@ -1,0 +1,133 @@
+# Default values for cloudflared.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+appName: dashy
+
+######## POD LEVEL CONFIG ################
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+replicaCount: 1
+
+revisionHistoryLimit: 3
+
+podAnnotations: {}
+
+imagePullSecrets: {}
+
+podSecurityContext: {}
+# fsGroup: 2000
+
+######## CONTAINER CONFIGS ################
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+
+image:
+  repository: lissy93/dashy
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "2.1.1"
+
+args: []
+
+env:
+- name: TZ
+  value: America/Los_Angeles
+- name: PUID
+  value: "1000"
+- name: PGID
+  value: "1000"
+- name: NODE_ENV
+  value: production
+ports:
+- containerPort: 80
+
+resources:
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  requests:
+    cpu: 100m
+    memory: 512Mi
+  limits:
+    memory: 512Mi
+
+readinessProbe:
+  tcpSocket:
+    port: 80
+  failureThreshold: 12
+  periodSeconds: 10
+
+livenessProbe:
+  tcpSocket:
+    port: 80
+  failureThreshold: 3
+  periodSeconds: 10
+  initialDelaySeconds: 10
+
+
+######## SERVICE AND INGRESS ################
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+service:
+  external:
+    enabled: true
+    name: http
+    type: ClusterIP
+    port: 80
+    protocol: TCP
+    targetPort: 80
+
+  internal:
+    enabled: true
+    name: local
+    type: NodePort
+    nodePort: 30040
+    port: 4000
+    protocol: TCP
+    targetPort: 80
+
+ingress:
+  enabled: true
+  className: "traefik"
+  annotations: {}
+  # kubernetes.io/ingress.class: nginx
+  # kubernetes.io/tls-acme: "true"
+  hosts:
+  - host: dash.darkwizrd.com
+    paths:
+    - path: /
+      pathType: Prefix
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+######## MISC ################
+
+nodeSelector: {}
+
+tolerations: {}
+
+affinity: {}
+
+nameOverride: ""
+
+fullnameOverride: ""

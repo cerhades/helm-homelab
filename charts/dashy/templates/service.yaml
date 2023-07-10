@@ -1,0 +1,19 @@
+{{- if .Values.service.external.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "dashy.fullname" . }}
+  labels:
+    {{- include "dashy.labels" . | nindent 4 }}
+spec:
+  {{- with .Values.service.external }}
+  type: {{ .type }}
+  ports:
+  - port: {{ .port }}
+    targetPort: {{ .targetPort }}
+    protocol: {{ .protocol }}
+    name: {{ .name }}
+  {{- end }}
+  selector:
+    {{- include "dashy.selectorLabels" . | nindent 4 }}
+{{- end }}
