@@ -1,0 +1,138 @@
+# Default values for cloudflared.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+appName: homarr
+
+######## POD LEVEL CONFIG ################
+deployment:
+  # -- Deployment strategy
+  strategy:
+    type: Recreate
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+replicaCount: 1
+
+revisionHistoryLimit: 3
+
+podAnnotations: {}
+
+imagePullSecrets: {}
+
+podSecurityContext: {}
+# fsGroup: 2000
+
+######## CONTAINER CONFIGS ################
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+
+image:
+  repository: ghcr.io/ajnart/homarr
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "0.12.2"
+
+args: []
+
+env:
+- name: TZ
+  value: America/Los_Angeles
+- name: PUID
+  value: "1000"
+- name: PGID
+  value: "1000"
+
+resources: {}
+# We usually recommend not to specify default resources and to leave this as a conscious
+# choice for the user. This also increases chances charts run on environments with little
+# resources, such as Minikube. If you do want to specify resources, uncomment the following
+# lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+# requests:
+#   cpu: 100m
+#   memory: 512Mi
+# limits:
+#   memory: 512Mi
+
+
+######## SERVICE AND INGRESS ################
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+service:
+  external:
+    enabled: true
+    name: http
+    type: ClusterIP
+    port: 80
+    protocol: TCP
+    targetPort: http
+
+  internal:
+    enabled: false
+    name: local
+    type: NodePort
+    nodePort: 30075
+    port: 7575
+    protocol: TCP
+    targetPort: 7575
+
+ingress:
+  enabled: false
+  className: "traefik"
+  annotations: {}
+  # kubernetes.io/ingress.class: nginx
+  # kubernetes.io/tls-acme: "true"
+  hosts:
+  - host: www.somesite.com
+    paths:
+    - path: /
+      pathType: Prefix
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+######## PERSISTENCE ################
+
+volumeMounts:
+- name: homarr-config
+  mountPath: /app/data/config
+  subPath: config
+- name: homarr-config
+  mountPath: /app/public/icons
+  subPath: icons
+
+persistence:
+  config:
+    enabled: true
+    name: homarr-config
+    accessMode: ReadWriteOnce
+    storageClass: # i.e. longhorn or local-path
+    size: 1Gi
+
+######## MISC ################
+
+nodeSelector: {}
+
+tolerations: {}
+
+affinity: {}
+
+nameOverride: ""
+
+fullnameOverride: ""
