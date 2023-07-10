@@ -3,6 +3,16 @@ entries:
   dashy:
   - apiVersion: v2
     appVersion: 2.1.1
+    created: "2023-07-10T07:18:32.579014857Z"
+    description: A Helm chart for Dashy Dashboard
+    digest: 2439055ad32350defc7631c71813355b3c128ecba17a7a4a44398c37e0b15e4b
+    name: dashy
+    type: application
+    urls:
+    - https://github.com/cerhades/helm-homelab/releases/download/dashy-0.1.1/dashy-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: 2.1.1
     created: "2023-07-10T06:21:59.158528324Z"
     description: A Helm chart for Dashy Dashboard
     digest: 5648ac925165547ed5c6284043a9fe3bac162a1681a86e87dce768d9ea5ffa0a
@@ -11,4 +21,4 @@ entries:
     urls:
     - https://github.com/cerhades/helm-homelab/releases/download/dashy-0.1.0/dashy-0.1.0.tgz
     version: 0.1.0
-generated: "2023-07-10T06:21:59.158533425Z"
+generated: "2023-07-10T07:18:32.579026557Z"
