@@ -38,7 +38,7 @@ image:
   repository: ghcr.io/ajnart/homarr
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "0.12.2"
+  tag: "0.14.2"
 
 args: []
 
@@ -102,10 +102,10 @@ ingress:
     paths:
     - path: /
       pathType: Prefix
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+  tls: # add [] here and comment out below if not using tls
+   - secretName: chart-example-tls
+     hosts:
+       - chart-example.local
 
 ######## PERSISTENCE ################
 
@@ -119,10 +119,10 @@ volumeMounts:
 
 persistence:
   config:
-    enabled: true
+    enabled: false
     name: homarr-config
     accessMode: ReadWriteOnce
-    storageClass: # i.e. longhorn or local-path
+    storageClass: '' # i.e. longhorn or local-path
     size: 1Gi
 
 ######## MISC ################

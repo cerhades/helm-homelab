@@ -116,10 +116,28 @@ ingress:
     paths:
     - path: /
       pathType: Prefix
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+  tls: # add [] here and comment out below if not using tls
+   - secretName: chart-example-tls
+     hosts:
+       - chart-example.local
+
+######## PERSISTENCE ################
+
+volumeMounts:
+# - name: dashy-config        # Uncomment to load your own config file. Must be uploaded into volume after creation and restarted.
+#   mountPath: /app/public/config.yml
+#   subPath: config
+- name: dashy-config
+  mountPath: /app/public/icons
+  subPath: icons
+
+persistence:
+  config:
+    enabled: true
+    name: dashy-config
+    accessMode: ReadWriteOnce
+    storageClass: '' # i.e. longhorn or local-path
+    size: 1Gi
 
 ######## MISC ################
 
