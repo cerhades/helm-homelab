@@ -3,6 +3,16 @@ entries:
   dashy:
   - apiVersion: v2
     appVersion: 2.1.1
+    created: "2023-11-27T05:30:34.823839509Z"
+    description: A Helm chart for Dashy Dashboard
+    digest: 9c857dd5ef8f0b20252f1d3015ac2cb28c5fc975ebea60d05f1ce03c07a49852
+    name: dashy
+    type: application
+    urls:
+    - https://github.com/cerhades/helm-homelab/releases/download/dashy-0.1.3/dashy-0.1.3.tgz
+    version: 0.1.3
+  - apiVersion: v2
+    appVersion: 2.1.1
     created: "2023-07-10T07:18:32.579014857Z"
     description: A Helm chart for Dashy Dashboard
     digest: 2439055ad32350defc7631c71813355b3c128ecba17a7a4a44398c37e0b15e4b
@@ -23,6 +33,16 @@ entries:
     version: 0.1.0
   homarr:
   - apiVersion: v2
+    appVersion: 0.14.2
+    created: "2023-11-27T05:30:35.082288366Z"
+    description: A Helm chart for homarr Dashboard
+    digest: e3c55247271511a5618f2cf5148fe66e2e4c8d8960431673aec18775f4bc1953
+    name: homarr
+    type: application
+    urls:
+    - https://github.com/cerhades/helm-homelab/releases/download/homarr-0.1.1/homarr-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
     appVersion: 0.12.2
     created: "2023-07-10T08:07:51.802905897Z"
     description: A Helm chart for homarr Dashboard
@@ -32,4 +52,4 @@ entries:
     urls:
     - https://github.com/cerhades/helm-homelab/releases/download/homarr-0.1.0/homarr-0.1.0.tgz
     version: 0.1.0
-generated: "2023-07-10T08:07:51.802920097Z"
+generated: "2023-11-27T05:30:35.082318402Z"
