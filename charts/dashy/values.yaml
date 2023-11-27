@@ -125,11 +125,11 @@ ingress:
 
 volumeMounts:
 # - name: dashy-config        # Uncomment to load your own config file. Must be uploaded into volume after creation and restarted.
-#   mountPath: /app/public/config.yml
+#   mountPath: /app/public/conf.yml
 #   subPath: config
 - name: dashy-config
-  mountPath: /app/public/icons
-  subPath: icons
+  mountPath: /app/public/item-icons
+  subPath: item-icons
 
 persistence:
   config:
