@@ -1,0 +1,61 @@
+# common-library/templates/service.yaml
+
+{{- if .Values.service.main.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "common-library.fullname" . }}-main
+  labels:
+    {{- include "common-library.labels" . | nindent 4 }}
+    app: {{ .Values.appName | default (include "common-library.fullname" .) }}
+spec:
+  type: {{ .Values.service.main.type }}
+  ports:
+    - port: {{ .Values.service.main.port }}
+      targetPort: {{ .Values.service.main.targetPort }}
+      protocol: {{ .Values.service.main.protocol }}
+  selector:
+    app: {{ .Values.appName | default (include "common-library.fullname" .) }}
+{{- end }}
+
+{{- if .Values.additionalServices.svc2.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "common-library.fullname" . }}-svc2
+  labels:
+    {{- include "common-library.labels" . | nindent 4 }}
+    app: {{ .Values.appName | default (include "common-library.fullname" .) }}
+spec:
+  type: {{ .Values.additionalServices.svc2.type }}
+  ports:
+    - port: {{ .Values.additionalServices.svc2.port }}
+      targetPort: {{ .Values.additionalServices.svc2.targetPort }}
+      protocol: {{ .Values.additionalServices.svc2.protocol }}
+  selector:
+    app: {{ .Values.appName | default (include "common-library.fullname" .) }}
+{{- end }}
+
+{{- if .Values.additionalServices.svc3.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "common-library.fullname" . }}-svc3
+  labels:
+    {{- include "common-library.labels" . | nindent 4 }}
+    app: {{ .Values.appName | default (include "common-library.fullname" .) }}
+spec:
+  type: {{ .Values.additionalServices.svc3.type }}
+  ports:
+    - port: {{ .Values.additionalServices.svc3.port }}
+      targetPort: {{ .Values.additionalServices.svc3.targetPort }}
+      protocol: {{ .Values.additionalServices.svc3.protocol }}
+  selector:
+    app: {{ .Values.appName | default (include "common-library.fullname" .) }}
+  {{- if eq .Values.additionalServices.svc3.type "NodePort" }}
+  nodePort: {{ .Values.additionalServices.svc3.nodePort }}
+  {{- end }}
+{{- end }}

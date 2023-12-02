@@ -1,0 +1,5 @@
+apiVersion: v2
+name: common-library
+description: A Common Library for Shared Configuration
+type: library
+version: 0.1.0

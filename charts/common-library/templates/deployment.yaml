@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.appName | default (include "common-library.fullname" .) }}
+  labels:
+    {{- include "common-library.labels" . | nindent 4 }}
+    app: {{ .Values.appName | default (include "common-library.fullname" .) }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "common-library.selectorLabels" . | nindent 6 }}
+      app: {{ .Values.appName | default (include "common-library.fullname" .) }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "common-library.labels" . | nindent 8 }}
+	{{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "common-library.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            {{- toYaml .Values.args | nindent 12 }}
+          env:
+            {{- toYaml .Values.env | nindent 12 }}
+          ports:
+            {{- toYaml .Values.ports | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          {{- with .Values.volumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      volumes:
+        {{- if .Values.persistence.pvc.enabled }}
+        - name: {{ .Values.persistence.pvc.name }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.pvc.name | default (include "common-library.fullname" .) }}-pvc
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
+        {{- if .Values.nfs.server1.enabled }}
+        - name: {{ .Values.nfs.server1.name }}
+          nfs:
+            server: {{ .Values.nfs.server1.server }}
+            path: {{ .Values.nfs.server1.path }}
+            readOnly: {{ .Values.nfs.server1.readOnly | default false }}
+        {{- end }}
+        {{- if .Values.nfs.server2.enabled }}
+        - name: {{ .Values.nfs.server2.name }}
+          nfs:
+            server: {{ .Values.nfs.server2.server }}
+            path: {{ .Values.nfs.server2.path }}
+            readOnly: {{ .Values.nfs.server2.readOnly | default false }}
+        {{- end }}
+        {{- if .Values.nfs.server3.enabled }}
+        - name: {{ .Values.nfs.server3.name }}
+          nfs:
+            server: {{ .Values.nfs.server3.server }}
+            path: {{ .Values.nfs.server3.path }}
+            readOnly: {{ .Values.nfs.server3.readOnly | default false }}
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
