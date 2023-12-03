@@ -47,7 +47,7 @@ env:
   value: "1000"
 
 ports:
-  containerPort: 9696
+- containerPort: 8080 # The port that your application uses
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
