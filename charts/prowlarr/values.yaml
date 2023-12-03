@@ -70,7 +70,7 @@ envFrom: []
 #     name: secret-name
 
 ports:
-  containerPort: 9696
+- containerPort: 9696
 
 # -- Configure the Security Context for the main container
 securityContext:
