@@ -5,7 +5,8 @@ on:
     branches:
       - main
     paths:
-      - "charts/stable/**"
+      - 'charts/stable/**'
+      - '!charts/testing-dont-use/**'
 
 jobs:
   release:
