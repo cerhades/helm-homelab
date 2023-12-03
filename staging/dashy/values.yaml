@@ -2,7 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-appName: my-app
+appName: dashy
 
 nameOverride: ""
 
@@ -38,10 +38,10 @@ affinity: {}
 imagePullSecrets: []
 
 image:
-  repository: my-app-image-repo
+  repository: lissy93/dashy
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "" # latest, 2.2.2, etc
+  tag: "2.1.1" # latest, 2.2.2, etc
 
 args: []
 
@@ -52,6 +52,8 @@ env:
   value: "1000"
 - name: PGID
   value: "1000"
+- name: NODE_ENV
+  value: production
 
 ports:
   containerPort: 80
