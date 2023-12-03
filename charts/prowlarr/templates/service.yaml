@@ -10,10 +10,10 @@ spec:
   {{- with .Values.service.main }}
   type: {{ .type }}
   ports:
-  - port: {{ .port }}
-    targetPort: {{ .targetPort }}
-    protocol: {{ .protocol }}
-    name: {{ .name }}
+  - port: {{ .ports.http.port }}
+    targetPort: {{ .ports.http.targetPort }}
+    protocol: {{ .ports.http.protocol }}
+    name: {{ .ports.http.name }}
   {{- end }}
   selector:
     {{- include "prowlarr.selectorLabels" . | nindent 4 }}
