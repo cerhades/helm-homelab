@@ -122,7 +122,7 @@ persistence:
     enabled: false
     name: homarr-config
     accessMode: ReadWriteOnce
-    storageClass: '' # i.e. longhorn or local-path
+    storageClass: '' # i.e. longhorn, rook, or local-path
     size: 1Gi
 
 ######## MISC ################
