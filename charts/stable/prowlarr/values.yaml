@@ -1,0 +1,147 @@
+# Default values for cloudflared.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+appName: prowlarr
+
+######## POD LEVEL CONFIG ################
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+replicaCount: 1
+
+revisionHistoryLimit: 3
+
+podAnnotations: {}
+
+imagePullSecrets: {}
+
+podSecurityContext: {}
+# fsGroup: 2000
+
+######## CONTAINER CONFIGS ################
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+
+image:
+  repository: hotio/prowlarr
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "release-1.10.5.4116"
+
+args: []
+
+env:
+- name: TZ
+  value: America/Los_Angeles
+- name: PUID
+  value: "1000"
+- name: PGID
+  value: "1000"
+
+ports:
+- containerPort: 9696
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # requests:
+  #   cpu: 100m
+  #   memory: 250Mi
+  # limits:
+  #   memory: 1000Mi
+
+readinessProbe:
+  tcpSocket:
+    port: 9696
+  failureThreshold: 12
+  periodSeconds: 10
+
+livenessProbe:
+  tcpSocket:
+    port: 9696
+  failureThreshold: 3
+  periodSeconds: 10
+  initialDelaySeconds: 10
+
+
+######## SERVICE AND INGRESS ################
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+service:
+  external:
+    enabled: true
+    name: http
+    type: ClusterIP
+    port: 80
+    protocol: TCP
+    targetPort: 9696
+
+ingress:
+  enabled: false
+  className: "traefik"
+  annotations: {}
+    # traefik.ingress.kubernetes.io/router.middlewares: "default-headers-middleware@kubernetescrd"
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+  - host: my.coolsite.com
+    paths:
+    - path: /
+      pathType: Prefix
+  tls: {}
+  #  - secretName: some-super-secret-tls
+  #    hosts:
+  #      - chart-example.local
+
+
+######## PERSISTENCE ################
+
+volumeMounts:
+- name: prowlarr-config
+  mountPath: /config
+# - name: additional-mount
+#   mountPath: /backup
+# - name: nas-mount
+#   mountPath: /nas
+#   nfs:
+#     server: 1.2.3.4
+#     path: /path/to/nfs/share
+
+persistence:
+  enabled: true
+  config:
+  name: prowlarr-config
+  accessMode: ReadWriteOnce
+  storageClass: "" # i.e longhorn
+  size: 2Gi
+
+
+######## MISC ################
+
+nodeSelector: {}
+
+tolerations: {}
+
+affinity: {}
+
+nameOverride: ""
+
+fullnameOverride: ""

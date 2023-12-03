@@ -1,0 +1,19 @@
+{{- if .Values.service.external.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "prowlarr.fullname" . }}
+  labels:
+    {{- include "prowlarr.labels" . | nindent 4 }}
+spec:
+  {{- with .Values.service.external }}
+  type: {{ .type }}
+  ports:
+  - port: {{ .port }}
+    targetPort: {{ .targetPort }}
+    protocol: {{ .protocol }}
+    name: {{ .name }}
+  {{- end }}
+  selector:
+    {{- include "prowlarr.selectorLabels" . | nindent 4 }}
+{{- end }}

@@ -1,6 +1,0 @@
-dependencies:
-- name: common-library
-  repository: https://cerhades.github.io/helm-homelab/
-  version: 0.1.1
-digest: sha256:65c642c99212783d16d3852f1ba520ac1e41cdedb87b34612de0b080808cc6c3
-generated: "2023-12-02T16:51:31.188986-08:00"
