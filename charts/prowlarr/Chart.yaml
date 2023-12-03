@@ -2,5 +2,5 @@ apiVersion: v2
 name: prowlarr
 description: A Helm chart for Prowlarr, a PVR indexer management application.
 type: application
-version: 0.1.3
+version: 0.1.4
 appVersion: "release-1.10.5.4116"
