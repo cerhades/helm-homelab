@@ -1,1 +1,0 @@
-{{- include "common-library.templates.deployment" . | nindent 0 }}

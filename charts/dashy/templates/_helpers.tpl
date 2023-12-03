@@ -1,1 +1,0 @@
-{{- include "common-library.templates._helpers" . | nindent 0 }}
