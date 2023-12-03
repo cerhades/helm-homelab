@@ -1,11 +1,12 @@
 name: Release Charts
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
     paths:
-      - 'charts/**'
+      - 'charts/stable/**'
       - '!charts/testing-dont-use/**'
 
 jobs:
