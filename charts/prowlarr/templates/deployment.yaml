@@ -39,7 +39,7 @@ spec:
           env:
             {{- toYaml .Values.env | nindent 12 }}
           ports:
-            {{- toYaml .Values.ports | nindent 12 }}
+            {{- toYaml .Values.ports.containerPort | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           readinessProbe:
