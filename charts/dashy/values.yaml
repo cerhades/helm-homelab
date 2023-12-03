@@ -1,10 +1,18 @@
-# Default values for cloudflared.
+# Default values for common-library.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 appName: dashy
 
+nameOverride: ""
+
+fullnameOverride: ""
+
 ######## POD LEVEL CONFIG ################
+
+replicaCount: 1
+
+revisionHistoryLimit: 3
 
 autoscaling:
   enabled: false
@@ -13,28 +21,27 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 
-replicaCount: 1
-
-revisionHistoryLimit: 3
-
 podAnnotations: {}
 
-imagePullSecrets: {}
+podLabels: {}
 
 podSecurityContext: {}
-# fsGroup: 2000
+  # fsGroup: 2000
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
 
 ######## CONTAINER CONFIGS ################
-
-securityContext:
-  allowPrivilegeEscalation: false
-  readOnlyRootFilesystem: false
+imagePullSecrets: []
 
 image:
   repository: lissy93/dashy
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "2.1.1"
+  tag: "2.1.1" # latest, 2.2.2, etc
 
 args: []
 
@@ -49,18 +56,7 @@ env:
   value: production
 
 ports:
-- containerPort: 80
-
-resources:
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # requests:
-  #   cpu: 100m
-  #   memory: 512Mi
-  # limits:
-  #   memory: 512Mi
+  containerPort: 80
 
 readinessProbe:
   tcpSocket:
@@ -75,78 +71,120 @@ livenessProbe:
   periodSeconds: 10
   initialDelaySeconds: 10
 
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+  # allowPrivilegeEscalation: false
+  # readOnlyRootFilesystem: false
 
 ######## SERVICE AND INGRESS ################
 
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
+  # Automatically mount a ServiceAccount's API credentials?
+  automount: true
   # Annotations to add to the service account
   annotations: {}
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
+
 service:
-  external:
+  main:
     enabled: true
-    name: http
     type: ClusterIP
-    port: 10080
+    port: 80
     protocol: TCP
     targetPort: 80
 
-  internal:
+additionalServices:
+  svc2:
     enabled: false
-    name: local
-    type: NodePort
-    nodePort: 30040
-    port: 4000
+    type: LoadBalancer
+    port: 3000
     protocol: TCP
-    targetPort: 80
+    targetPort: 3000
+
+  svc3:
+    enabled: false
+    type: NodePort
+    nodePort: 30001
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+
 
 ingress:
   enabled: false
-  className: "traefik"
+  className: "" # traefik, nginx, etc
   annotations: {}
-  # kubernetes.io/ingress.class: nginx
-  # kubernetes.io/tls-acme: "true"
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+    # traefik.ingress.kubernetes.io/router.middlewares: "your-middleware-here@kubernetescrd"
   hosts:
-  - host: www.somesite.com
-    paths:
-    - path: /
-      pathType: Prefix
-  tls: # add [] here and comment out below if not using tls
-   - secretName: chart-example-tls
-     hosts:
-       - chart-example.local
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific # Prefix, etc
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
 
-######## PERSISTENCE ################
 
-volumeMounts:
-# - name: dashy-config        # Uncomment to load your own config file. Must be uploaded into volume after creation and restarted.
-#   mountPath: /app/public/conf.yml
-#   subPath: config
-- name: dashy-config
-  mountPath: /app/public/item-icons
-  subPath: item-icons
-
+######## PERSISTENCE & Volumes ################
+# Additional volumes on the output Deployment definition.
 persistence:
-  config:
-    enabled: true
-    name: dashy-config
+  pvc:
+    enabled: false
+    name: app-config
     accessMode: ReadWriteOnce
-    storageClass: '' # i.e. longhorn or local-path
+    storageClass: "" # i.e longhorn, rook, etc
     size: 1Gi
 
-######## MISC ################
+nfs:
+  server1:
+    enabled: false
+    name: data-server1
+    server: # NFS server address. (ip or FQDN)
+    path: /path/to/nfs/share1 # NFS share path
+    readOnly: false # Set to true if NFS volume should be mounted in read-only mode
 
-nodeSelector: {}
+  server2:
+    enabled: false
+    name: data-server2
+    server: # NFS server address. (ip or FQDN)
+    path: /path/to/nfs/share2 # NFS share path
+    readOnly: false # Set to true if NFS volume should be mounted in read-only mode
 
-tolerations: {}
+  server3:
+    enabled: false
+    name: data-server3
+    server: # NFS server address. (ip or FQDN)
+    path: /path/to/nfs/share3 # NFS share path
+    readOnly: false # Set to true if NFS volume should be mounted in read-only mode
 
-affinity: {}
+# Additional volumeMounts on the output Deployment definition.
+volumeMounts: []
+# - name: foo
+#   mountPath: "/etc/foo"
+#   readOnly: true
 
-nameOverride: ""
-
-fullnameOverride: ""
