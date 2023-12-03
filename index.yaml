@@ -14,6 +14,16 @@ entries:
   prowlarr:
   - apiVersion: v2
     appVersion: release-1.10.5.4116
+    created: "2023-12-03T10:14:09.440114237Z"
+    description: A Helm chart for Prowlarr, a PVR indexer management application.
+    digest: a5918b3e4551997c97942d40e751c796d599314d2b72e4201077cf493c79a094
+    name: prowlarr
+    type: application
+    urls:
+    - https://github.com/cerhades/helm-homelab/releases/download/prowlarr-0.1.12/prowlarr-0.1.12.tgz
+    version: 0.1.12
+  - apiVersion: v2
+    appVersion: release-1.10.5.4116
     created: "2023-12-03T09:53:19.508386256Z"
     description: A Helm chart for Prowlarr, a PVR indexer management application.
     digest: d4ad63dd1c44b003b000986276ab0b4e025fe4bf58e53622f3c6476e1688bc15
@@ -32,4 +42,4 @@ entries:
     urls:
     - https://github.com/cerhades/helm-homelab/releases/download/prowlarr-0.1.10/prowlarr-0.1.10.tgz
     version: 0.1.10
-generated: "2023-12-03T09:53:19.508402156Z"
+generated: "2023-12-03T10:14:09.440130227Z"
